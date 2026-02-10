@@ -1,5 +1,6 @@
 package com.restaurantapp.demo.dto.ResponseDto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,9 @@ public class OrderItemResponseDto {
     private Long id;
     private Integer quantity;
     private String notes;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime updatedAt;
     private UUID orderId;
     private UUID menuItemId;

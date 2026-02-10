@@ -1,5 +1,6 @@
 package com.restaurantapp.demo.dto.ResponseDto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.restaurantapp.demo.entity.enums.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,9 @@ public class ReservationResponseDto {
     private LocalDate endAt;
     private ReservationStatus status;
     private String notes;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime updatedAt;
     private UUID createdById;
     private UUID updatedById;

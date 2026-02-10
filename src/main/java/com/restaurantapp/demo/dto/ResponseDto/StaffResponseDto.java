@@ -1,5 +1,6 @@
 package com.restaurantapp.demo.dto.ResponseDto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +20,14 @@ public class StaffResponseDto {
     private String lastName;
     private Double salary;
     private String position;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateJoined;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateLeft;
     private String cin;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime updatedAt;
     private UUID userId;
 }

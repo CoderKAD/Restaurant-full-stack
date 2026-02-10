@@ -1,5 +1,6 @@
 package com.restaurantapp.demo.dto.ResponseDto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.restaurantapp.demo.entity.enums.DemandStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,9 @@ import java.util.UUID;
 public class ReservationDemandResponseDto {
     private Long id;
     private DemandStatus status;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime updatedAt;
     private Long reservationId;
     private UUID customerId;

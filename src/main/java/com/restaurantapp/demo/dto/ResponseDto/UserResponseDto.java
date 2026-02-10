@@ -1,5 +1,6 @@
 package com.restaurantapp.demo.dto.ResponseDto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.restaurantapp.demo.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,9 @@ public class UserResponseDto {
     private String username;
     private String email;
     private Role roles;
+    private String passwordHash;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime updatedAt;
 }

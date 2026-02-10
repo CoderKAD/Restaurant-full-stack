@@ -1,5 +1,6 @@
 package com.restaurantapp.demo.dto.ResponseDto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.restaurantapp.demo.entity.enums.OrderStatus;
 import com.restaurantapp.demo.entity.enums.OrderType;
 import lombok.AllArgsConstructor;
@@ -20,8 +21,11 @@ public class OrderResponseDto {
     private OrderType typeOrder;
     private OrderStatus status;
     private String notes;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime updatedAt;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Long restaurantTableId;
     private UUID createdById;
     private UUID updatedById;
