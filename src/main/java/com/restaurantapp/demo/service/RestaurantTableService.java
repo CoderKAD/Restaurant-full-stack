@@ -39,6 +39,7 @@ public class RestaurantTableService {
     public RestaurantTableResponseDto createTable(RestaurantTableRequestDto dto) {
         RestaurantTable entity = restaurantTableMapper.toEntity(dto);
         entity.setId(null);
+        entity.setPublicCode(generatePublicCode());
         if (dto.getUserId() != null) {
             entity.setUser(getUserEntity(dto.getUserId()));
         } else {
@@ -51,6 +52,9 @@ public class RestaurantTableService {
     public RestaurantTableResponseDto updateTable(Long id, RestaurantTableRequestDto dto) {
         RestaurantTable existing = getTableEntity(id);
         restaurantTableMapper.updateEntity(dto, existing);
+        if (existing.getPublicCode() == null || existing.getPublicCode().isBlank()) {
+            existing.setPublicCode(generatePublicCode());
+        }
         if (dto.getUserId() != null) {
             existing.setUser(getUserEntity(dto.getUserId()));
         } else {
@@ -75,5 +79,14 @@ public class RestaurantTableService {
     private User getUserEntity(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+    }
+
+    private String generatePublicCode() {
+        long next = restaurantTableRepository.count() + 1;
+        String candidate;
+        do {
+            candidate = String.format("TAB-%04d", next++);
+        } while (restaurantTableRepository.existsByPublicCode(candidate));
+        return candidate;
     }
 }

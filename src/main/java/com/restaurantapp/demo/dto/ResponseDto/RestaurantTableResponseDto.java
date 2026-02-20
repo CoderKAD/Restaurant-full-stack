@@ -18,7 +18,7 @@ public class RestaurantTableResponseDto {
     private Long id;
     private String label;
     private Integer seats;
-    private String code;
+    private String publicCode;
     private Boolean active;
     private TableStatus status;
     @JsonFormat(pattern = "dd-MM-yyyy")

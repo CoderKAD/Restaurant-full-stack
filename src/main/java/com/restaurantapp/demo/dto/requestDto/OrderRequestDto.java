@@ -16,7 +16,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequestDto {
-    private String publicCode;
     @NotNull
     private OrderType typeOrder;
     @NotNull

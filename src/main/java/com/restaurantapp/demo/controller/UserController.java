@@ -2,7 +2,7 @@ package com.restaurantapp.demo.controller;
 
 import com.restaurantapp.demo.dto.ResponseDto.UserResponseDto;
 import com.restaurantapp.demo.dto.requestDto.UserRequestDto;
-import com.restaurantapp.demo.service.UserManagementService;
+import com.restaurantapp.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserManagementService userManagementService;
+    private final UserService userManagementService;
 
-    public UserController(UserManagementService userManagementService) {
+    public UserController(UserService userManagementService) {
         this.userManagementService = userManagementService;
     }
 

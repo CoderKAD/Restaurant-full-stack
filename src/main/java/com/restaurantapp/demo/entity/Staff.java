@@ -42,6 +42,7 @@ public class Staff {
     private LocalDate dateLeft;
 
     @NotBlank
+    @Column(unique = true)
     private String cin;
 
     @CreatedDate
@@ -54,6 +55,6 @@ public class Staff {
 
     // One-to-One: Associated user account
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id" ,nullable = true ,unique = true)
     private User user;
 }

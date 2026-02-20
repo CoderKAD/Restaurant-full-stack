@@ -33,7 +33,8 @@ public class RestaurantTable {
 
     private Integer seats;
 
-    private String code;
+    @Column(name = "public_code")
+    private String publicCode;
 
     private Boolean active;
 

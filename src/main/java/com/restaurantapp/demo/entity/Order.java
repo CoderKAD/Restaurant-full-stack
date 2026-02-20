@@ -69,4 +69,5 @@ public class Order {
     // One-to-One: Payment for this order
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
+
 }

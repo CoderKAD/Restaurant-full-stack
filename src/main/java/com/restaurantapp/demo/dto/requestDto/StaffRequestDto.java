@@ -19,6 +19,7 @@ public class StaffRequestDto {
     @NotBlank
     private String lastName;
     private Double salary;
+
     @NotBlank
     private String position;
     private LocalDate dateJoined;

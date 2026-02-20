@@ -40,7 +40,7 @@ public class User {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private Role roles;
+    private Role roles =Role.CUSTOMER;
 
     @CreatedDate
     @Column( name = "created_at", nullable = false, updatable = false)

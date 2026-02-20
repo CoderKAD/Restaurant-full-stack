@@ -54,7 +54,7 @@ public class Customer {
 
     // One-to-One: Associated user account
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     // One-to-Many: Cart items for this customer

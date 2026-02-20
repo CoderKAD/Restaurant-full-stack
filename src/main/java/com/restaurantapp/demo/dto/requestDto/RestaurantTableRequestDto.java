@@ -19,7 +19,6 @@ public class RestaurantTableRequestDto {
     @Size(min = 2, max = 50)
     private String label;
     private Integer seats;
-    private String code;
     private Boolean active;
     private TableStatus status;
     private UUID userId;

@@ -2,6 +2,7 @@ package com.restaurantapp.demo.service;
 
 import com.restaurantapp.demo.dto.ResponseDto.OrderItemResponseDto;
 import com.restaurantapp.demo.dto.ResponseDto.OrderResponseDto;
+import com.restaurantapp.demo.dto.ResponseDto.OrderWithItemsResponseDto;
 import com.restaurantapp.demo.dto.requestDto.OrderItemRequestDto;
 import com.restaurantapp.demo.dto.requestDto.OrderRequestDto;
 import com.restaurantapp.demo.entity.MenuItem;
@@ -20,6 +21,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -57,9 +59,11 @@ public class OrderManagementService {
         return orderMapper.toDto(getOrderEntity(id));
     }
 
+
     public OrderResponseDto createOrder(OrderRequestDto dto) {
         Order entity = orderMapper.toEntity(dto);
-        entity.setId(null);
+
+        entity.setPublicCode(generatePublicCode());
         if (dto.getRestaurantTableId() != null) {
             entity.setRestaurantTable(getRestaurantTableEntity(dto.getRestaurantTableId()));
         } else {
@@ -165,5 +169,16 @@ public class OrderManagementService {
     private MenuItem getMenuItemEntity(UUID id) {
         return menuItemRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("MenuItem not found with id: " + id));
+    }
+
+    private OrderWithItemsResponseDto toOrderWithItemsResponse(Order order) {
+        OrderResponseDto orderDto = orderMapper.toDto(order);
+        List<OrderItemResponseDto> orderItems = orderItemMapper.toDto(order.getOrderItems());
+        return new OrderWithItemsResponseDto(orderDto, orderItems);
+    }
+
+    private String generatePublicCode() {
+        long count = orderRepository.count() + 1;
+        return String.format("ORD-%04d", count);
     }
 }
