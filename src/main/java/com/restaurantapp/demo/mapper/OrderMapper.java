@@ -18,16 +18,19 @@ public interface OrderMapper {
     @Mapping(target = "restaurantTable", source = "restaurantTableId", qualifiedByName = "mapRestaurantTableId")
     @Mapping(target = "createdBy", source = "createdById", qualifiedByName = "mapUserId")
     @Mapping(target = "updatedBy", source = "updatedById", qualifiedByName = "mapUserId")
+    @Mapping(target = "deliveryAddress", source = "deliveryAddress")
     Order toEntity(OrderRequestDto dto);
 
     @Mapping(target = "restaurantTable", source = "restaurantTableId", qualifiedByName = "mapRestaurantTableId")
     @Mapping(target = "createdBy", source = "createdById", qualifiedByName = "mapUserId")
     @Mapping(target = "updatedBy", source = "updatedById", qualifiedByName = "mapUserId")
+    @Mapping(target = "deliveryAddress", source = "deliveryAddress")
     void updateEntity(OrderRequestDto dto, @MappingTarget Order entity);
 
     @Mapping(target = "restaurantTableId", source = "restaurantTable.id")
     @Mapping(target = "createdById", source = "createdBy.id")
     @Mapping(target = "updatedById", source = "updatedBy.id")
+    @Mapping(target = "deliveryAddress", source = "deliveryAddress")
     OrderResponseDto toDto(Order entity);
 
     @Mapping(target = "restaurantTableId", source = "restaurantTable.id")

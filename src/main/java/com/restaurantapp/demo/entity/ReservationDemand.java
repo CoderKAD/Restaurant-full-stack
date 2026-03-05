@@ -2,6 +2,7 @@ package com.restaurantapp.demo.entity;
 
 
 
+
 import com.restaurantapp.demo.entity.enums.DemandStatus;
 import jakarta.persistence.*;
 import lombok.*;

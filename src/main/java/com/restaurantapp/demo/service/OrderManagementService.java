@@ -10,6 +10,7 @@ import com.restaurantapp.demo.entity.Order;
 import com.restaurantapp.demo.entity.OrderItem;
 import com.restaurantapp.demo.entity.RestaurantTable;
 import com.restaurantapp.demo.entity.User;
+import com.restaurantapp.demo.entity.enums.OrderType;
 import com.restaurantapp.demo.mapper.OrderItemMapper;
 import com.restaurantapp.demo.mapper.OrderMapper;
 import com.restaurantapp.demo.repository.MenuItemRepository;
@@ -64,19 +65,14 @@ public class OrderManagementService {
         Order entity = orderMapper.toEntity(dto);
 
         entity.setPublicCode(generatePublicCode());
-        if (dto.getRestaurantTableId() != null) {
-            entity.setRestaurantTable(getRestaurantTableEntity(dto.getRestaurantTableId()));
-        } else {
-            entity.setRestaurantTable(null);
-        }
+        orderTypeRulesForCreate(dto, entity);
         if (dto.getCreatedById() != null) {
-            entity.setCreatedBy(getUserEntity(dto.getCreatedById()));
+            User creator = getUserEntity(dto.getCreatedById());
+            entity.setCreatedBy(creator);
+            // On creation, the order has not been updated yet; keep updatedBy in sync with createdBy.
+            entity.setUpdatedBy(creator);
         } else {
             entity.setCreatedBy(null);
-        }
-        if (dto.getUpdatedById() != null) {
-            entity.setUpdatedBy(getUserEntity(dto.getUpdatedById()));
-        } else {
             entity.setUpdatedBy(null);
         }
         Order saved = orderRepository.save(entity);
@@ -86,21 +82,6 @@ public class OrderManagementService {
     public OrderResponseDto updateOrder(UUID id, OrderRequestDto dto) {
         Order existing = getOrderEntity(id);
         orderMapper.updateEntity(dto, existing);
-        if (dto.getRestaurantTableId() != null) {
-            existing.setRestaurantTable(getRestaurantTableEntity(dto.getRestaurantTableId()));
-        } else {
-            existing.setRestaurantTable(null);
-        }
-        if (dto.getCreatedById() != null) {
-            existing.setCreatedBy(getUserEntity(dto.getCreatedById()));
-        } else {
-            existing.setCreatedBy(null);
-        }
-        if (dto.getUpdatedById() != null) {
-            existing.setUpdatedBy(getUserEntity(dto.getUpdatedById()));
-        } else {
-            existing.setUpdatedBy(null);
-        }
         Order saved = orderRepository.save(existing);
         return orderMapper.toDto(saved);
     }
@@ -180,5 +161,31 @@ public class OrderManagementService {
     private String generatePublicCode() {
         long count = orderRepository.count() + 1;
         return String.format("ORD-%04d", count);
+    }
+
+    private void orderTypeRulesForCreate(OrderRequestDto dto, Order entity) {
+        OrderType orderType = dto.getTypeOrder();
+        if (orderType == null) {
+            throw new IllegalArgumentException("Order type is required.");
+        }
+
+        if (orderType == OrderType.DINE_IN) {
+            if (dto.getRestaurantTableId() == null) {
+                throw new IllegalArgumentException("table_id is required for dine-in orders.");
+            }
+            RestaurantTable table = getRestaurantTableEntity(dto.getRestaurantTableId());
+            if (!Boolean.TRUE.equals(table.getActive())) {
+                throw new IllegalArgumentException("table_id is not listed in the restaurant table schedule.");
+            }
+
+        }
+
+        if (orderType == OrderType.DELIVERY) {
+            if (dto.getDeliveryAddress() == null || dto.getDeliveryAddress().isBlank()) {
+                throw new IllegalArgumentException("deliveryAddress is required for delivery orders.");
+            }
+        }
+
+
     }
 }

@@ -22,6 +22,8 @@ public class OrderRequestDto {
     private OrderStatus status;
     @Size(max = 500)
     private String notes;
+    @Size(max = 1000)
+    private String deliveryAddress;
     private Long restaurantTableId;
     private UUID createdById;
     private UUID updatedById;

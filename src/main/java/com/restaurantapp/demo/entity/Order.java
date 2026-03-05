@@ -39,6 +39,9 @@ public class Order {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
+    @Column(name = "delivery_address", columnDefinition = "TEXT")
+    private String deliveryAddress;
+
     @CreatedDate
     @Column( name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -67,7 +70,7 @@ public class Order {
     private List<OrderItem> orderItems;
 
     // One-to-One: Payment for this order
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL ,orphanRemoval = true)
     private Payment payment;
 
 }

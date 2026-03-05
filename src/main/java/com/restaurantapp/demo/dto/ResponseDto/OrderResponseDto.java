@@ -21,6 +21,7 @@ public class OrderResponseDto {
     private OrderType typeOrder;
     private OrderStatus status;
     private String notes;
+    private String deliveryAddress;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
     @JsonFormat(pattern = "dd-MM-yyyy")
