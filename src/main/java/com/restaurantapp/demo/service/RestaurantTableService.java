@@ -7,6 +7,7 @@ import com.restaurantapp.demo.entity.User;
 import com.restaurantapp.demo.mapper.RestaurantTableMapper;
 import com.restaurantapp.demo.repository.RestaurantTableRepository;
 import com.restaurantapp.demo.repository.UserRepository;
+import com.restaurantapp.demo.util.PublicCodeGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -82,11 +83,7 @@ public class RestaurantTableService {
     }
 
     private String generatePublicCode() {
-        long next = restaurantTableRepository.count() + 1;
-        String candidate;
-        do {
-            candidate = String.format("TAB-%04d", next++);
-        } while (restaurantTableRepository.existsByPublicCode(candidate));
-        return candidate;
+        long start = restaurantTableRepository.count() + 1;
+        return PublicCodeGenerator.generateTableCode(start, restaurantTableRepository::existsByPublicCode);
     }
 }

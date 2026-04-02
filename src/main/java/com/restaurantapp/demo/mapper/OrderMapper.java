@@ -1,6 +1,7 @@
 package com.restaurantapp.demo.mapper;
 
 import com.restaurantapp.demo.dto.ResponseDto.OrderResponseDto;
+import com.restaurantapp.demo.mapper.OrderItemMapper;
 import com.restaurantapp.demo.dto.requestDto.OrderRequestDto;
 import com.restaurantapp.demo.entity.Order;
 import com.restaurantapp.demo.entity.RestaurantTable;
@@ -13,7 +14,7 @@ import org.mapstruct.Named;
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = OrderItemMapper.class)
 public interface OrderMapper {
     @Mapping(target = "restaurantTable", source = "restaurantTableId", qualifiedByName = "mapRestaurantTableId")
     @Mapping(target = "createdBy", source = "createdById", qualifiedByName = "mapUserId")
@@ -31,11 +32,13 @@ public interface OrderMapper {
     @Mapping(target = "createdById", source = "createdBy.id")
     @Mapping(target = "updatedById", source = "updatedBy.id")
     @Mapping(target = "deliveryAddress", source = "deliveryAddress")
+    @Mapping(target = "orderItems", source = "orderItems")
     OrderResponseDto toDto(Order entity);
 
     @Mapping(target = "restaurantTableId", source = "restaurantTable.id")
     @Mapping(target = "createdById", source = "createdBy.id")
     @Mapping(target = "updatedById", source = "updatedBy.id")
+    @Mapping(target = "orderItems", source = "orderItems")
     List<OrderResponseDto> toDto(List<Order> entity);
 
     @Named("mapRestaurantTableId")

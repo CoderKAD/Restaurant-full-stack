@@ -57,10 +57,6 @@ public class Customer {
     @JoinColumn(name = "user_id")
     private User user;
 
-    // One-to-Many: Cart items for this customer
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CartItem> cartItems;
-
     // One-to-Many: Reservation demands made by this customer
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ReservationDemand> demandReservations;

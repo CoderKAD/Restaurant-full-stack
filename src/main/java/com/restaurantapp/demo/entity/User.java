@@ -28,10 +28,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true, nullable = false)
+    @NotBlank(message = "Username is required")
     private String username;
 
-    @Column(name = "password_hash")
+    @Column(name = "password_hash", nullable = false)
+    @NotBlank(message = "Password is required")
     private String passwordHash;
 
     @Column(unique = true, nullable = false)
@@ -81,4 +83,5 @@ public class User {
     // One-to-One: Staff profile
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Staff staff;
+
 }

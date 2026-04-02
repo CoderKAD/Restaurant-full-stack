@@ -1,6 +1,7 @@
 package com.restaurantapp.demo.dto.ResponseDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.restaurantapp.demo.dto.ResponseDto.OrderItemResponseDto;
 import com.restaurantapp.demo.entity.enums.OrderStatus;
 import com.restaurantapp.demo.entity.enums.OrderType;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -30,4 +32,5 @@ public class OrderResponseDto {
     private Long restaurantTableId;
     private UUID createdById;
     private UUID updatedById;
+    private List<OrderItemResponseDto> orderItems;
 }

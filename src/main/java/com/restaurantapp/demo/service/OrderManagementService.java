@@ -2,7 +2,6 @@ package com.restaurantapp.demo.service;
 
 import com.restaurantapp.demo.dto.ResponseDto.OrderItemResponseDto;
 import com.restaurantapp.demo.dto.ResponseDto.OrderResponseDto;
-import com.restaurantapp.demo.dto.ResponseDto.OrderWithItemsResponseDto;
 import com.restaurantapp.demo.dto.requestDto.OrderItemRequestDto;
 import com.restaurantapp.demo.dto.requestDto.OrderRequestDto;
 import com.restaurantapp.demo.entity.MenuItem;
@@ -18,11 +17,11 @@ import com.restaurantapp.demo.repository.OrderItemRepository;
 import com.restaurantapp.demo.repository.OrderRepository;
 import com.restaurantapp.demo.repository.RestaurantTableRepository;
 import com.restaurantapp.demo.repository.UserRepository;
+import com.restaurantapp.demo.util.PublicCodeGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -56,6 +55,10 @@ public class OrderManagementService {
         return orderMapper.toDto(orders);
     }
 
+    public List<OrderResponseDto> getAllOrdersWithItems() {
+        return getAllOrders();
+    }
+
     public OrderResponseDto getOrderById(UUID id) {
         return orderMapper.toDto(getOrderEntity(id));
     }
@@ -71,9 +74,6 @@ public class OrderManagementService {
             entity.setCreatedBy(creator);
             // On creation, the order has not been updated yet; keep updatedBy in sync with createdBy.
             entity.setUpdatedBy(creator);
-        } else {
-            entity.setCreatedBy(null);
-            entity.setUpdatedBy(null);
         }
         Order saved = orderRepository.save(entity);
         return orderMapper.toDto(saved);
@@ -152,15 +152,9 @@ public class OrderManagementService {
                 .orElseThrow(() -> new EntityNotFoundException("MenuItem not found with id: " + id));
     }
 
-    private OrderWithItemsResponseDto toOrderWithItemsResponse(Order order) {
-        OrderResponseDto orderDto = orderMapper.toDto(order);
-        List<OrderItemResponseDto> orderItems = orderItemMapper.toDto(order.getOrderItems());
-        return new OrderWithItemsResponseDto(orderDto, orderItems);
-    }
-
     private String generatePublicCode() {
-        long count = orderRepository.count() + 1;
-        return String.format("ORD-%04d", count);
+        long start = orderRepository.count() + 1;
+        return PublicCodeGenerator.generateOrderCode(start, orderRepository::existsByPublicCode);
     }
 
     private void orderTypeRulesForCreate(OrderRequestDto dto, Order entity) {

@@ -2,13 +2,17 @@ package com.restaurantapp.demo.service;
 
 import com.restaurantapp.demo.dto.ResponseDto.CustomerResponseDto;
 import com.restaurantapp.demo.dto.ResponseDto.StaffResponseDto;
+import com.restaurantapp.demo.dto.ResponseDto.UserResponseDto;
 import com.restaurantapp.demo.dto.requestDto.CustomerRequestDto;
 import com.restaurantapp.demo.dto.requestDto.StaffRequestDto;
+import com.restaurantapp.demo.dto.requestDto.UserRequestDto;
 import com.restaurantapp.demo.entity.Customer;
 import com.restaurantapp.demo.entity.Staff;
 import com.restaurantapp.demo.entity.User;
+import com.restaurantapp.demo.entity.enums.Role;
 import com.restaurantapp.demo.mapper.CustomerMapper;
 import com.restaurantapp.demo.mapper.StaffMapper;
+import com.restaurantapp.demo.mapper.UserMapper;
 import com.restaurantapp.demo.repository.CustomerRepository;
 import com.restaurantapp.demo.repository.StaffRepository;
 import com.restaurantapp.demo.repository.UserRepository;
@@ -26,17 +30,20 @@ public class StaffCustomerService {
     private final UserRepository userRepository;
     private final StaffMapper staffMapper;
     private final CustomerMapper customerMapper;
+    private final UserMapper userMapper;
 
     public StaffCustomerService(StaffRepository staffRepository,
                                 CustomerRepository customerRepository,
                                 UserRepository userRepository,
                                 StaffMapper staffMapper,
+                                UserMapper userMapper,
                                 CustomerMapper customerMapper) {
         this.staffRepository = staffRepository;
         this.customerRepository = customerRepository;
         this.userRepository = userRepository;
         this.staffMapper = staffMapper;
         this.customerMapper = customerMapper;
+        this.userMapper = userMapper;
     }
 
     public List<StaffResponseDto> getAllStaff() {
@@ -125,4 +132,56 @@ public class StaffCustomerService {
         return customerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
     }
+    // handling User
+
+    public List<UserResponseDto> getAllUsers() {
+        return userMapper.toDto(userRepository.findAll());
+    }
+
+    public UserResponseDto createUser(UserRequestDto dto) {
+        validateUniqueOnCreate(dto);
+        User user = userMapper.toEntity(dto);
+        user.setId(null);
+        if (user.getRoles() == null) {
+            user.setRoles(Role.CUSTOMER);
+        }
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    public UserResponseDto updateUser(UUID id, UserRequestDto dto) {
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+        validateUniqueOnUpdate(id, dto);
+        userMapper.updateEntity(dto, existing);
+        return userMapper.toDto(userRepository.save(existing));
+    }
+
+    public void deleteUser(UUID id) {
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException("User not found with id: " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    private void validateUniqueOnCreate(UserRequestDto dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("Email already exists: " + dto.getEmail());
+        }
+        if (dto.getUsername() != null && !dto.getUsername().isBlank()
+                && userRepository.existsByUsername(dto.getUsername())) {
+            throw new IllegalArgumentException("Username already exists: " + dto.getUsername());
+        }
+    }
+
+    private void validateUniqueOnUpdate(UUID id, UserRequestDto dto) {
+        if (userRepository.existsByEmailIgnoreCaseAndIdNot(dto.getEmail(), id)) {
+            throw new IllegalArgumentException("Email already exists: " + dto.getEmail());
+        }
+        if (dto.getUsername() != null && !dto.getUsername().isBlank()
+                && userRepository.existsByUsernameAndIdNot(dto.getUsername(), id)) {
+            throw new IllegalArgumentException("Username already exists: " + dto.getUsername());
+        }
+    }
+
+
 }

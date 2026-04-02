@@ -7,6 +7,7 @@ import com.restaurantapp.demo.entity.enums.Role;
 import com.restaurantapp.demo.mapper.UserMapper;
 import com.restaurantapp.demo.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +18,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository,
+                       UserMapper userMapper,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserResponseDto> getAllUsers() {
@@ -31,9 +36,10 @@ public class UserService {
         validateUniqueOnCreate(dto);
         User user = userMapper.toEntity(dto);
         user.setId(null);
-        if (user.getRoles() == null) {
-            user.setRoles(Role.CUSTOMER);
-        }
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setPasswordHash(passwordEncoder.encode(dto.getPasswordHash()));
+        user.setRoles(dto.getRoles() == null ? Role.CUSTOMER : dto.getRoles());
         return userMapper.toDto(userRepository.save(user));
     }
 
@@ -41,7 +47,12 @@ public class UserService {
         User existing = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
         validateUniqueOnUpdate(id, dto);
-        userMapper.updateEntity(dto, existing);
+        existing.setUsername(dto.getUsername());
+        existing.setEmail(dto.getEmail());
+        existing.setRoles(dto.getRoles() == null ? existing.getRoles() : dto.getRoles());
+        if (dto.getPasswordHash() != null && !dto.getPasswordHash().isBlank()) {
+            existing.setPasswordHash(passwordEncoder.encode(dto.getPasswordHash()));
+        }
         return userMapper.toDto(userRepository.save(existing));
     }
 
@@ -53,7 +64,7 @@ public class UserService {
     }
 
     private void validateUniqueOnCreate(UserRequestDto dto) {
-        if (userRepository.existsByEmail(dto.getEmail())) {
+        if (dto.getEmail() != null && userRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("Email already exists: " + dto.getEmail());
         }
         if (dto.getUsername() != null && !dto.getUsername().isBlank()
@@ -63,7 +74,7 @@ public class UserService {
     }
 
     private void validateUniqueOnUpdate(UUID id, UserRequestDto dto) {
-        if (userRepository.existsByEmailIgnoreCaseAndIdNot(dto.getEmail(), id)) {
+        if (dto.getEmail() != null && userRepository.existsByEmailIgnoreCaseAndIdNot(dto.getEmail(), id)) {
             throw new IllegalArgumentException("Email already exists: " + dto.getEmail());
         }
         if (dto.getUsername() != null && !dto.getUsername().isBlank()

@@ -7,12 +7,14 @@ import com.restaurantapp.demo.dto.requestDto.ReservationRequestDto;
 import com.restaurantapp.demo.service.ReservationManagementService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/reservations")
+@PreAuthorize("isAuthenticated() and !hasRole('KITCHEN')")
 public class ReservationController {
     private final ReservationManagementService reservationManagementService;
 
