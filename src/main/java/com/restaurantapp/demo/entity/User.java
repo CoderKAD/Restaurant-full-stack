@@ -72,10 +72,6 @@ public class User {
     @OneToMany(mappedBy = "updatedBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reservation> reservationsUpdated;
 
-    // One-to-Many: Payments processed by this user
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Payment> payments;
-
     // One-to-One: Customer profile
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Customer customer;

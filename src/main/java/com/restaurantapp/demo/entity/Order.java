@@ -3,6 +3,7 @@ package com.restaurantapp.demo.entity;
 
 import com.restaurantapp.demo.entity.enums.OrderStatus;
 import com.restaurantapp.demo.entity.enums.OrderType;
+import com.restaurantapp.demo.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+
     @Column(columnDefinition = "TEXT")
     private String notes;
 
@@ -68,9 +73,5 @@ public class Order {
     // One-to-Many: Items in this order
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
-
-    // One-to-One: Payment for this order
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL ,orphanRemoval = true)
-    private Payment payment;
 
 }

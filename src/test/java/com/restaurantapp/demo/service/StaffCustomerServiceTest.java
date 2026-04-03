@@ -3,6 +3,7 @@ package com.restaurantapp.demo.service;
 import com.restaurantapp.demo.dto.requestDto.StaffRequestDto;
 import com.restaurantapp.demo.mapper.CustomerMapper;
 import com.restaurantapp.demo.mapper.StaffMapper;
+import com.restaurantapp.demo.mapper.UserMapper;
 import com.restaurantapp.demo.repository.CustomerRepository;
 import com.restaurantapp.demo.repository.StaffRepository;
 import com.restaurantapp.demo.repository.UserRepository;
@@ -29,6 +30,8 @@ class StaffCustomerServiceTest {
     private StaffMapper staffMapper;
     @Mock
     private CustomerMapper customerMapper;
+    @Mock
+    private UserMapper userMapper;
 
     private StaffCustomerService staffCustomerService;
 
@@ -39,6 +42,7 @@ class StaffCustomerServiceTest {
                 customerRepository,
                 userRepository,
                 staffMapper,
+                userMapper,
                 customerMapper
         );
     }
@@ -48,7 +52,7 @@ class StaffCustomerServiceTest {
         StaffRequestDto dto = new StaffRequestDto();
         dto.setCin("AB123456");
 
-        when(staffRepository.existsByCinIgnoreCase("AB123456", id)).thenReturn(true);
+        when(staffRepository.existsByCinIgnoreCase("AB123456")).thenReturn(true);
 
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
