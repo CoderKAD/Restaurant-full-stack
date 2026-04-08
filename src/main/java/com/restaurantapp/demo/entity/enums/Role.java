@@ -1,5 +1,5 @@
 package com.restaurantapp.demo.entity.enums;
 
 public enum Role {
-    ADMIN, CUSTOMER, KITCHEN, CASHIER
+    ADMIN, CUSTOMER, KITCHEN, CASHIER ,DELIVERY
 }

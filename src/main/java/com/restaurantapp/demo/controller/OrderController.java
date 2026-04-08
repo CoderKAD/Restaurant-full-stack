@@ -2,17 +2,14 @@ package com.restaurantapp.demo.controller;
 
 import com.restaurantapp.demo.dto.ResponseDto.OrderItemResponseDto;
 import com.restaurantapp.demo.dto.ResponseDto.OrderResponseDto;
-import com.restaurantapp.demo.dto.ResponseDto.OrderWithItemsResponseDto;
 import com.restaurantapp.demo.dto.requestDto.OrderItemRequestDto;
 import com.restaurantapp.demo.dto.requestDto.OrderRequestDto;
-import com.restaurantapp.demo.repository.OrderRepository;
 import com.restaurantapp.demo.service.OrderManagementService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 @RestController
@@ -27,6 +24,11 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
         return ResponseEntity.ok(orderManagementService.getAllOrders());
+    }
+
+    @GetMapping("/with-items")
+    public ResponseEntity<List<OrderResponseDto>> getAllOrdersWithItems() {
+        return ResponseEntity.ok(orderManagementService.getAllOrdersWithItems());
     }
 
     @GetMapping("/{id}")
