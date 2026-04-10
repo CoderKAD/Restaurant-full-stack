@@ -42,8 +42,8 @@ public class ReservationDemand {
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
-    // Many-to-One: Customer who made this demand
+    // Many-to-One:  who made this demand
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "user_id")
+    private User user;
 }

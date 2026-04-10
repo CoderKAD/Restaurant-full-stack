@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/reservations")
 @PreAuthorize("isAuthenticated() and !hasRole('KITCHEN')")
 public class ReservationController {
-    private final ReservationManagementService reservationManagementService;
+    /*private final ReservationManagementService reservationManagementService;
 
     public ReservationController(ReservationManagementService reservationManagementService) {
         this.reservationManagementService = reservationManagementService;
@@ -82,5 +82,5 @@ public class ReservationController {
     public ResponseEntity<Void> deleteDemand(@PathVariable Long id) {
         reservationManagementService.deleteDemand(id);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 }

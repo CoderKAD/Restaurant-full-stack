@@ -1,22 +1,18 @@
 package com.restaurantapp.demo.service;
 
-import com.restaurantapp.demo.dto.ResponseDto.CustomerResponseDto;
 import com.restaurantapp.demo.dto.ResponseDto.StaffResponseDto;
 import com.restaurantapp.demo.dto.ResponseDto.UserResponseDto;
-import com.restaurantapp.demo.dto.requestDto.CustomerRequestDto;
 import com.restaurantapp.demo.dto.requestDto.StaffRequestDto;
 import com.restaurantapp.demo.dto.requestDto.UserRequestDto;
-import com.restaurantapp.demo.entity.Customer;
 import com.restaurantapp.demo.entity.Staff;
 import com.restaurantapp.demo.entity.User;
 import com.restaurantapp.demo.entity.enums.Role;
-import com.restaurantapp.demo.mapper.CustomerMapper;
 import com.restaurantapp.demo.mapper.StaffMapper;
 import com.restaurantapp.demo.mapper.UserMapper;
-import com.restaurantapp.demo.repository.CustomerRepository;
 import com.restaurantapp.demo.repository.StaffRepository;
 import com.restaurantapp.demo.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,24 +22,22 @@ import java.util.UUID;
 public class StaffCustomerService {
 
     private final StaffRepository staffRepository;
-    private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
     private final StaffMapper staffMapper;
-    private final CustomerMapper customerMapper;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public StaffCustomerService(StaffRepository staffRepository,
-                                CustomerRepository customerRepository,
                                 UserRepository userRepository,
                                 StaffMapper staffMapper,
                                 UserMapper userMapper,
-                                CustomerMapper customerMapper) {
+                                PasswordEncoder passwordEncoder
+                               ) {
         this.staffRepository = staffRepository;
-        this.customerRepository = customerRepository;
         this.userRepository = userRepository;
         this.staffMapper = staffMapper;
-        this.customerMapper = customerMapper;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<StaffResponseDto> getAllStaff() {
@@ -73,31 +67,7 @@ public class StaffCustomerService {
         staffRepository.deleteById(id);
     }
 
-    public List<CustomerResponseDto> getAllCustomers() {
-        return customerMapper.toDto(customerRepository.findAll());
-    }
 
-    public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
-        User user = getUserEntity(dto.getUserId());
-        Customer entity = customerMapper.toEntity(dto);
-        entity.setUser(user);
-        return customerMapper.toDto(customerRepository.save(entity));
-    }
-
-    public CustomerResponseDto updateCustomer(UUID id, CustomerRequestDto dto) {
-        Customer existing = getCustomerEntity(id);
-        User user = getUserEntity(dto.getUserId());
-        customerMapper.updateEntity(dto, existing);
-        existing.setUser(user);
-        return customerMapper.toDto(customerRepository.save(existing));
-    }
-
-    public void deleteCustomer(UUID id) {
-        if (!customerRepository.existsById(id)) {
-            throw new EntityNotFoundException("Customer not found with id: " + id);
-        }
-        customerRepository.deleteById(id);
-    }
 
     private void validateStaffCinForCreate(String cin ) {
         if (staffRepository.existsByCinIgnoreCase(cin )) {
@@ -128,10 +98,6 @@ public class StaffCustomerService {
                 .orElseThrow(() -> new EntityNotFoundException("Staff not found with id: " + id));
     }
 
-    private Customer getCustomerEntity(UUID id) {
-        return customerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
-    }
     // handling User
 
     public List<UserResponseDto> getAllUsers() {
@@ -142,6 +108,7 @@ public class StaffCustomerService {
         validateUniqueOnCreate(dto);
         User user = userMapper.toEntity(dto);
         user.setId(null);
+        user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         if (user.getRoles() == null) {
             user.setRoles(Role.CUSTOMER);
         }
@@ -153,6 +120,9 @@ public class StaffCustomerService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
         validateUniqueOnUpdate(id, dto);
         userMapper.updateEntity(dto, existing);
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            existing.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
+        }
         return userMapper.toDto(userRepository.save(existing));
     }
 

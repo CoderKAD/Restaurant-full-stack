@@ -17,20 +17,26 @@ import java.util.UUID;
 @AllArgsConstructor
 
 public class MenuItemRequestDto {
-    @NotBlank
-    @Size(min = 2, max = 100)
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     private String name;
-    @Size(max = 500)
+
+    @Size(max = 500, message = "Description must be at most 500 characters")
     private String description;
 
-    @NotNull
-    @DecimalMin(value = "0.0", inclusive = false)
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private Double price;
 
+    @NotNull(message = "Active is required")
     private Boolean active;
+
+    @Size(max = 255, message = "Image URL must be at most 255 characters")
     private String imageUrl;
-    @Size(max = 50)
+
+    @Size(max = 50, message = "Prep station must be at most 50 characters")
     private String prepStation;
-    @NotNull
+
+    @NotNull(message = "Category id is required")
     private UUID categoryId;
 }

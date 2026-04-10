@@ -5,6 +5,8 @@ import com.restaurantapp.demo.entity.enums.OrderStatus;
 import com.restaurantapp.demo.entity.enums.OrderType;
 import com.restaurantapp.demo.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -54,6 +56,10 @@ public class Order {
     @LastModifiedDate
     @Column( name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @NotBlank
+    @Size(max = 20)
+    private String phone;
 
     // Many-to-One: Table where this order is placed
     @ManyToOne

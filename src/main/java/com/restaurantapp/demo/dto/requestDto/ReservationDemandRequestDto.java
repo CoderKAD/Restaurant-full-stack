@@ -1,5 +1,6 @@
 package com.restaurantapp.demo.dto.requestDto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.restaurantapp.demo.entity.enums.DemandStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,10 +15,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationDemandRequestDto {
-    @NotNull
+    @NotNull(message = "Status is required")
     private DemandStatus status;
-    @NotNull
+
+    @NotNull(message = "Reservation id is required")
     private Long reservationId;
-    @NotNull
-    private UUID customerId;
+
+    @NotNull(message = "User id is required")
+    @JsonAlias("customerId")
+    private UUID userId;
 }

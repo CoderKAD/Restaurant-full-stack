@@ -4,12 +4,10 @@ import com.restaurantapp.demo.dto.ResponseDto.ReservationDemandResponseDto;
 import com.restaurantapp.demo.dto.ResponseDto.ReservationResponseDto;
 import com.restaurantapp.demo.dto.requestDto.ReservationDemandRequestDto;
 import com.restaurantapp.demo.dto.requestDto.ReservationRequestDto;
-import com.restaurantapp.demo.entity.Customer;
 import com.restaurantapp.demo.entity.Reservation;
 import com.restaurantapp.demo.entity.ReservationDemand;
 import com.restaurantapp.demo.entity.RestaurantTable;
 import com.restaurantapp.demo.entity.User;
-import com.restaurantapp.demo.repository.CustomerRepository;
 import com.restaurantapp.demo.repository.ReservationDemandRepository;
 import com.restaurantapp.demo.repository.ReservationRepository;
 import com.restaurantapp.demo.repository.RestaurantTableRepository;
@@ -23,22 +21,20 @@ import java.util.UUID;
 
 @Service
 public class ReservationManagementService {
-    private final ReservationRepository reservationRepository;
+    /*private final ReservationRepository reservationRepository;
     private final ReservationDemandRepository reservationDemandRepository;
     private final RestaurantTableRepository restaurantTableRepository;
     private final UserRepository userRepository;
-    private final CustomerRepository customerRepository;
 
     public ReservationManagementService(ReservationRepository reservationRepository,
                                         ReservationDemandRepository reservationDemandRepository,
                                         RestaurantTableRepository restaurantTableRepository,
                                         UserRepository userRepository,
-                                        CustomerRepository customerRepository) {
+                                       ) {
         this.reservationRepository = reservationRepository;
         this.reservationDemandRepository = reservationDemandRepository;
         this.restaurantTableRepository = restaurantTableRepository;
         this.userRepository = userRepository;
-        this.customerRepository = customerRepository;
     }
 
     public List<ReservationResponseDto> getAllReservations() {
@@ -106,7 +102,6 @@ public class ReservationManagementService {
         ReservationDemand existing = getDemandEntity(id);
         existing.setStatus(dto.getStatus());
         existing.setReservation(getReservationEntity(dto.getReservationId()));
-        existing.setCustomer(getCustomerEntity(dto.getCustomerId()));
         return toDemandDto(reservationDemandRepository.save(existing));
     }
 
@@ -132,10 +127,7 @@ public class ReservationManagementService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
 
-    private Customer getCustomerEntity(UUID id) {
-        return customerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
-    }
+
 
     private List<RestaurantTable> resolveTables(List<Long> tableIds) {
         if (tableIds == null || tableIds.isEmpty()) {
@@ -183,5 +175,5 @@ public class ReservationManagementService {
                 demand.getReservation() != null ? demand.getReservation().getId() : null,
                 demand.getCustomer() != null ? demand.getCustomer().getId() : null
         );
-    }
+    }*/
 }

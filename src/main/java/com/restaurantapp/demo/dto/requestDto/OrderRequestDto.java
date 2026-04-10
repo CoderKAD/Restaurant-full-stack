@@ -2,6 +2,8 @@ package com.restaurantapp.demo.dto.requestDto;
 
 import com.restaurantapp.demo.entity.enums.OrderStatus;
 import com.restaurantapp.demo.entity.enums.OrderType;
+import com.restaurantapp.demo.entity.enums.PaymentStatus;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -16,15 +18,25 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequestDto {
-    @NotNull
+    @NotNull(message = "Order type is required")
     private OrderType typeOrder;
-    @NotNull
+
+    @NotNull(message = "Order status is required")
     private OrderStatus status;
-    @Size(max = 500)
+
+    private PaymentStatus paymentStatus;
+
+    @Size(max = 500, message = "Notes must be at most 500 characters")
     private String notes;
-    @Size(max = 1000)
+
+    @Size(max = 1000, message = "Delivery address must be at most 1000 characters")
     private String deliveryAddress;
+
     private Long restaurantTableId;
     private UUID createdById;
     private UUID updatedById;
+
+    @NotBlank(message = "Phone is required")
+    @Size(max = 20, message = "Phone must be at most 20 characters")
+    private String phone;
 }

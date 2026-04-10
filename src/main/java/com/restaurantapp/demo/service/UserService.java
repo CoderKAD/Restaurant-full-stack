@@ -38,7 +38,7 @@ public class UserService {
         user.setId(null);
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-        user.setPasswordHash(passwordEncoder.encode(dto.getPasswordHash()));
+        user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         user.setRoles(dto.getRoles() == null ? Role.CUSTOMER : dto.getRoles());
         return userMapper.toDto(userRepository.save(user));
     }
@@ -50,8 +50,8 @@ public class UserService {
         existing.setUsername(dto.getUsername());
         existing.setEmail(dto.getEmail());
         existing.setRoles(dto.getRoles() == null ? existing.getRoles() : dto.getRoles());
-        if (dto.getPasswordHash() != null && !dto.getPasswordHash().isBlank()) {
-            existing.setPasswordHash(passwordEncoder.encode(dto.getPasswordHash()));
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            existing.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         }
         return userMapper.toDto(userRepository.save(existing));
     }

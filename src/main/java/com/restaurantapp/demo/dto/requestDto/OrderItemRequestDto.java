@@ -15,13 +15,16 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItemRequestDto {
-    @NotNull
-    @Min(1)
+    @NotNull(message = "Quantity is required")
+    @Min(value = 1, message = "Quantity must be at least 1")
     private Integer quantity;
-    @Size(max = 500)
+
+    @Size(max = 500, message = "Notes must be at most 500 characters")
     private String notes;
-    @NotNull
+
+    @NotNull(message = "Order id is required")
     private UUID orderId;
-    @NotNull
+
+    @NotNull(message = "Menu item id is required")
     private UUID menuItemId;
 }

@@ -1,8 +1,6 @@
 package com.restaurantapp.demo.controller;
 
-import com.restaurantapp.demo.dto.ResponseDto.CustomerResponseDto;
 import com.restaurantapp.demo.dto.ResponseDto.StaffResponseDto;
-import com.restaurantapp.demo.dto.requestDto.CustomerRequestDto;
 import com.restaurantapp.demo.dto.requestDto.StaffRequestDto;
 import com.restaurantapp.demo.service.StaffCustomerService;
 import jakarta.validation.Valid;
@@ -50,31 +48,7 @@ public class StaffCustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/customers")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<CustomerResponseDto>> getAllCustomers() {
-        return ResponseEntity.ok(staffCustomerService.getAllCustomers());
-    }
 
-    @PostMapping("/customers")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CustomerResponseDto> createCustomer(@Valid @RequestBody CustomerRequestDto dto) {
-        return ResponseEntity.ok(staffCustomerService.createCustomer(dto));
-    }
 
-    @PutMapping("/customers/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CustomerResponseDto> updateCustomer(
-            @PathVariable UUID id,
-            @Valid @RequestBody CustomerRequestDto dto
-    ) {
-        return ResponseEntity.ok(staffCustomerService.updateCustomer(id, dto));
-    }
 
-    @DeleteMapping("/customers/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
-        staffCustomerService.deleteCustomer(id);
-        return ResponseEntity.noContent().build();
-    }
 }

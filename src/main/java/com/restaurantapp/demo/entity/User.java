@@ -72,9 +72,7 @@ public class User {
     @OneToMany(mappedBy = "updatedBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reservation> reservationsUpdated;
 
-    // One-to-One: Customer profile
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Customer customer;
+
 
     // One-to-One: Staff profile
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
